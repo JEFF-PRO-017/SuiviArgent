@@ -1,0 +1,109 @@
+<div class="form-page" [class.dark]="darkMode()">
+
+  <!-- Barre supérieure -->
+  <div class="topbar">
+    <span class="page-title">Nouvelle transaction</span>
+    <button class="theme-btn" (click)="toggleDark()" [attr.aria-label]="darkMode() ? 'Mode clair' : 'Mode sombre'">
+      {{ darkMode() ? '○' : '◑' }}
+    </button>
+  </div>
+
+  <!-- Toggle type -->
+  <div class="type-toggle">
+    <button class="type-btn" [class.active-in]="type() === 'in'" (click)="setType('in')">
+      + Entrée
+    </button>
+    <button class="type-btn" [class.active-out]="type() === 'out'" (click)="setType('out')">
+      − Sortie
+    </button>
+  </div>
+
+  <!-- Montant -->
+  <div class="field">
+    <label for="amount">Montant</label>
+    <div class="amount-wrap">
+      <span class="currency">F</span>
+      <input
+        id="amount"
+        type="number"
+        inputmode="decimal"
+        min="0"
+        placeholder="0"
+        [(ngModel)]="amount"
+        (input)="onAmountInput()"
+        (keyup.enter)="submit()"
+        autocomplete="off" />
+      @if (amountFormatted) {
+        <span class="amount-preview">{{ amountFormatted }}</span>
+      }
+    </div>
+  </div>
+
+  <!-- Justification -->
+  <div class="field">
+    <label for="justif">Justification</label>
+    <div class="justif-wrap">
+      <input
+        id="justif"
+        type="text"
+        placeholder="Choisir ou saisir…"
+        [(ngModel)]="justif"
+        (focus)="onJustifFocus()"
+        (blur)="onJustifBlur()"
+        (input)="onJustifInput()"
+        (keyup.enter)="submit()"
+        autocomplete="off" />
+
+      @if (showSuggestions) {
+        <div class="suggestions">
+
+          @for (s of filteredSuggestions(); track s) {
+            <div class="sug-item" (mousedown)="pickSuggestion(s)">{{ s }}</div>
+          }
+
+          @if (showCustomOption()) {
+            <div class="sug-item sug-custom" (mousedown)="pickSuggestion(justif)">
+              + Utiliser "{{ justif }}"
+            </div>
+          }
+
+          @if (filteredSuggestions().length === 0 && !showCustomOption()) {
+            <div class="sug-empty">Aucune suggestion</div>
+          }
+
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Date + raccourcis multi-année -->
+  <div class="field">
+    <label for="date">Date</label>
+    <input
+      id="date"
+      type="date"
+      [(ngModel)]="date"
+      (input)="onDateInput()" />
+
+    <div class="date-shortcuts">
+      @for (s of shortcuts; track s.label; let i = $index) {
+        <button
+          class="shortcut"
+          [class.active]="activeShortcut === i"
+          (click)="setDateShortcut(s.offset, i)">
+          {{ s.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Bouton principal -->
+  <button
+    class="btn-submit"
+    [class.btn-in]="type() === 'in'"
+    [class.btn-out]="type() === 'out'"
+    (click)="submit()">
+    {{ type() === 'in' ? "Ajouter l'entrée" : 'Ajouter la sortie' }}
+  </button>
+
+</div>
