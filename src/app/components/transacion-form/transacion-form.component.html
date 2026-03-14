@@ -1,109 +1,137 @@
-<div class="form-page" [class.dark]="darkMode()">
+<div class="form-page min-vh-100 py-4" [class.dark]="darkMode()" [formGroup]="form">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-5">
 
-  <!-- Barre supérieure -->
-  <div class="topbar">
-    <span class="page-title">Nouvelle transaction</span>
-    <button class="theme-btn" (click)="toggleDark()" [attr.aria-label]="darkMode() ? 'Mode clair' : 'Mode sombre'">
-      {{ darkMode() ? '○' : '◑' }}
-    </button>
-  </div>
-
-  <!-- Toggle type -->
-  <div class="type-toggle">
-    <button class="type-btn" [class.active-in]="type() === 'in'" (click)="setType('in')">
-      + Entrée
-    </button>
-    <button class="type-btn" [class.active-out]="type() === 'out'" (click)="setType('out')">
-      − Sortie
-    </button>
-  </div>
-
-  <!-- Montant -->
-  <div class="field">
-    <label for="amount">Montant</label>
-    <div class="amount-wrap">
-      <span class="currency">F</span>
-      <input
-        id="amount"
-        type="number"
-        inputmode="decimal"
-        min="0"
-        placeholder="0"
-        [(ngModel)]="amount"
-        (input)="onAmountInput()"
-        (keyup.enter)="submit()"
-        autocomplete="off" />
-      @if (amountFormatted) {
-        <span class="amount-preview">{{ amountFormatted }}</span>
-      }
-    </div>
-  </div>
-
-  <!-- Justification -->
-  <div class="field">
-    <label for="justif">Justification</label>
-    <div class="justif-wrap">
-      <input
-        id="justif"
-        type="text"
-        placeholder="Choisir ou saisir…"
-        [(ngModel)]="justif"
-        (focus)="onJustifFocus()"
-        (blur)="onJustifBlur()"
-        (input)="onJustifInput()"
-        (keyup.enter)="submit()"
-        autocomplete="off" />
-
-      @if (showSuggestions) {
-        <div class="suggestions">
-
-          @for (s of filteredSuggestions(); track s) {
-            <div class="sug-item" (mousedown)="pickSuggestion(s)">{{ s }}</div>
-          }
-
-          @if (showCustomOption()) {
-            <div class="sug-item sug-custom" (mousedown)="pickSuggestion(justif)">
-              + Utiliser "{{ justif }}"
-            </div>
-          }
-
-          @if (filteredSuggestions().length === 0 && !showCustomOption()) {
-            <div class="sug-empty">Aucune suggestion</div>
-          }
-
+        <!-- Topbar -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <span class="fw-medium">Nouvelle transaction</span>
+          <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1"
+            (click)="toggleDark()">
+            {{ darkMode() ? '○' : '◑' }}
+          </button>
         </div>
-      }
-    </div>
-  </div>
 
-  <!-- Date + raccourcis multi-année -->
-  <div class="field">
-    <label for="date">Date</label>
-    <input
-      id="date"
-      type="date"
-      [(ngModel)]="date"
-      (input)="onDateInput()" />
+        <!-- Toggle type -->
+        <div class="btn-group w-100 mb-4" role="group">
+          <button type="button" class="btn btn-outline-secondary type-btn"
+            [class.active-in]="type() === 'in'" (click)="setType('in')">
+            + Entrée
+          </button>
+          <button type="button" class="btn btn-outline-secondary type-btn"
+            [class.active-out]="type() === 'out'" (click)="setType('out')">
+            − Sortie
+          </button>
+        </div>
 
-    <div class="date-shortcuts">
-      @for (s of shortcuts; track s.label; let i = $index) {
-        <button
-          class="shortcut"
-          [class.active]="activeShortcut === i"
-          (click)="setDateShortcut(s.offset, i)">
-          {{ s.label }}
+        <!-- Montant -->
+        <div class="mb-3">
+          <label for="amount" class="form-label text-uppercase small text-secondary fw-medium">
+            Montant
+          </label>
+          <div class="input-group">
+            <span class="input-group-text text-secondary small">F</span>
+            <input
+              id="amount"
+              type="text"
+              inputmode="numeric"
+              class="form-control amount-input"
+              [class.is-invalid]="isInvalid(amountCtrl)"
+              placeholder="0"
+              formControlName="amount"
+              mask="separator.0"
+              thousandSeparator=" "
+              (keyup.enter)="submit()" />
+            <span class="input-group-text text-secondary small">FCFA</span>
+            @if (isInvalid(amountCtrl)) {
+              <div class="invalid-feedback">Montant requis (min. 1)</div>
+            }
+          </div>
+        </div>
+
+        <!-- Justification -->
+        <div class="mb-3">
+          <label for="justif" class="form-label text-uppercase small text-secondary fw-medium">
+            Justification
+          </label>
+          <div class="position-relative">
+            <input
+              id="justif"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="isInvalid(justifCtrl)"
+              placeholder="Choisir ou saisir…"
+              formControlName="justif"
+              (focus)="onJustifFocus()"
+              (blur)="onJustifBlur()"
+              (keyup.enter)="submit()"
+              autocomplete="off" />
+
+            @if (isInvalid(justifCtrl)) {
+              <div class="invalid-feedback">Justification requise</div>
+            }
+
+            @if (showSuggestions) {
+              <ul class="suggestions list-group border rounded-2">
+                @for (s of filteredSuggestions(); track s) {
+                  <li class="list-group-item list-group-item-action sug-item py-2 px-3"
+                    (mousedown)="pickSuggestion(s)">{{ s }}
+                  </li>
+                }
+                @if (showCustomOption()) {
+                  <li class="list-group-item list-group-item-action sug-item sug-custom py-2 px-3"
+                    (mousedown)="pickSuggestion(justifCtrl.value ?? '')">
+                    + Utiliser "{{ justifCtrl.value }}"
+                  </li>
+                }
+                @if (filteredSuggestions().length === 0 && !showCustomOption()) {
+                  <li class="list-group-item text-secondary small py-2 px-3">
+                    Aucune suggestion
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        </div>
+
+        <!-- Date + raccourcis -->
+        <div class="mb-4">
+          <label for="date" class="form-label text-uppercase small text-secondary fw-medium">
+            Date
+          </label>
+          <input
+            id="date"
+            type="date"
+            class="form-control"
+            [class.is-invalid]="isInvalid(dateCtrl)"
+            formControlName="date"
+            (input)="onDateInput()" />
+          @if (isInvalid(dateCtrl)) {
+            <div class="invalid-feedback">Date requise</div>
+          }
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            @for (s of shortcuts; track s.label; let i = $index) {
+              <button
+                type="button"
+                class="btn btn-sm rounded-pill"
+                [class.btn-outline-secondary]="activeShortcut !== i"
+                [class.btn-secondary]="activeShortcut === i"
+                (click)="setDateShortcut(s.offset, i)">
+                {{ s.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Bouton principal -->
+        <button type="button" class="btn btn-submit w-100 py-3 fw-medium"
+          [class.btn-in]="type() === 'in'"
+          [class.btn-out]="type() === 'out'"
+          (click)="submit()">
+          {{ type() === 'in' ? "Ajouter l'entrée" : 'Ajouter la sortie' }}
         </button>
-      }
+
+      </div>
     </div>
   </div>
-
-  <!-- Bouton principal -->
-  <button
-    class="btn-submit"
-    [class.btn-in]="type() === 'in'"
-    [class.btn-out]="type() === 'out'"
-    (click)="submit()">
-    {{ type() === 'in' ? "Ajouter l'entrée" : 'Ajouter la sortie' }}
-  </button>
-
 </div>

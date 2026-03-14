@@ -1,244 +1,54 @@
-// ── Variables ────────────────────────────────────────────────────────────────
-:host {
-  display: block;
-}
+// Uniquement ce que Bootstrap ne fournit pas
 
+// ── Variables de thème ────────────────────────────────────────────────────────
 .form-page {
-  --bg:        #ffffff;
-  --bg2:       #f7f7f5;
-  --bg3:       #efefec;
-  --border:    #e5e5e2;
-  --text:      #111111;
-  --text2:     #888888;
-  --in:        #1D9E75;
-  --in-bg:     #E1F5EE;
-  --in-text:   #0F6E56;
-  --out:       #D85A30;
-  --out-bg:    #FAECE7;
-  --out-text:  #993C1D;
+  --clr-in:       #1D9E75;
+  --clr-in-bg:    #E1F5EE;
+  --clr-in-text:  #0F6E56;
+  --clr-out:      #D85A30;
+  --clr-out-bg:   #FAECE7;
+  --clr-out-text: #993C1D;
 
-  background: var(--bg);
-  color:       var(--text);
-  max-width:   440px;
-  margin:      0 auto;
-  padding:     1.25rem 1rem 2.5rem;
-  transition:  background .2s, color .2s;
-
-  // ── Mode sombre ─────────────────────────────────────────
   &.dark {
-    --bg:       #1a1a1a;
-    --bg2:      #242424;
-    --bg3:      #2e2e2e;
-    --border:   #3a3a3a;
-    --text:     #f0f0f0;
-    --text2:    #999999;
-    --in-bg:    #04342C;
-    --in-text:  #9FE1CB;
-    --out-bg:   #4A1B0C;
-    --out-text: #F5C4B3;
+    --bs-body-bg:    #1a1a1a;
+    --bs-body-color: #f0f0f0;
+    --bs-border-color: #3a3a3a;
+
+    --clr-in-bg:    #04342C;
+    --clr-in-text:  #9FE1CB;
+    --clr-out-bg:   #4A1B0C;
+    --clr-out-text: #F5C4B3;
+
+    .form-control,
+    .input-group-text { background-color: #242424; color: #f0f0f0; }
   }
 }
 
-// ── Barre supérieure ──────────────────────────────────────────────────────────
-.topbar {
-  display:         flex;
-  justify-content: space-between;
-  align-items:     center;
-  margin-bottom:   1.25rem;
-}
-
-.page-title {
-  font-size:   15px;
-  font-weight: 500;
-  color:       var(--text);
-}
-
-.theme-btn {
-  width:         32px;
-  height:        32px;
-  border:        0.5px solid var(--border);
-  border-radius: 8px;
-  background:    var(--bg2);
-  color:         var(--text);
-  cursor:        pointer;
-  font-size:     14px;
-  display:       flex;
-  align-items:   center;
-  justify-content: center;
-  transition:    background .15s;
-  &:hover { background: var(--bg3); }
-}
-
-// ── Toggle type ───────────────────────────────────────────────────────────────
-.type-toggle {
-  display:               grid;
-  grid-template-columns: 1fr 1fr;
-  gap:                   6px;
-  margin-bottom:         1.25rem;
-}
-
+// ── Toggle type (Bootstrap btn-group ne gère pas ces couleurs custom) ─────────
 .type-btn {
-  padding:       10px;
-  border:        1.5px solid var(--border);
-  border-radius: 8px;
-  background:    transparent;
-  cursor:        pointer;
-  font-size:     14px;
-  font-weight:   500;
-  color:         var(--text2);
-  transition:    .15s;
-
-  &.active-in  { border-color: var(--in);  background: var(--in-bg);  color: var(--in-text);  }
-  &.active-out { border-color: var(--out); background: var(--out-bg); color: var(--out-text); }
-  &:not(.active-in):not(.active-out):hover { background: var(--bg2); }
+  &.active-in  { border-color: var(--clr-in);  background: var(--clr-in-bg);  color: var(--clr-in-text); }
+  &.active-out { border-color: var(--clr-out); background: var(--clr-out-bg); color: var(--clr-out-text); }
 }
 
-// ── Champs ────────────────────────────────────────────────────────────────────
-.field { margin-bottom: 1rem; }
-
-label {
-  display:         block;
-  font-size:       11px;
-  font-weight:     500;
-  color:           var(--text2);
-  margin-bottom:   5px;
-  text-transform:  uppercase;
-  letter-spacing:  .04em;
+// ── Bouton submit (couleurs custom non disponibles dans Bootstrap) ─────────────
+.btn-submit {
+  &.btn-in  { background: var(--clr-in);  color: #fff; border: none; }
+  &.btn-out { background: var(--clr-out); color: #fff; border: none; }
 }
 
-input[type='text'],
-input[type='number'],
-input[type='date'] {
-  width:       100%;
-  padding:     10px 12px;
-  border:      0.5px solid var(--border);
-  border-radius: 8px;
-  background:  var(--bg);
-  color:       var(--text);
-  font-size:   15px;
-  outline:     none;
-  transition:  border-color .15s;
-  &:focus { border-color: var(--in); }
-}
-
-// Montant
-.amount-wrap {
-  position: relative;
-  input {
-    padding-left:  28px;
-    font-size:     20px;
-    font-weight:   500;
-    // Masquer les flèches spinner
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button { -webkit-appearance: none; }
-    -moz-appearance: textfield;
-  }
-}
-
-.currency {
-  position:   absolute;
-  left:       11px;
-  top:        50%;
-  transform:  translateY(-50%);
-  font-size:  13px;
-  color:      var(--text2);
-  pointer-events: none;
-}
-
-.amount-preview {
-  position:   absolute;
-  right:      12px;
-  top:        50%;
-  transform:  translateY(-50%);
-  font-size:  12px;
-  color:      var(--text2);
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-// Justification + suggestions
-.justif-wrap { position: relative; }
-
+// ── Suggestions (dropdown custom — pas un BS dropdown) ────────────────────────
 .suggestions {
   position:      absolute;
-  top:           calc(100% + 3px);
+  top:           calc(100% + 2px);
   left:          0;
   right:         0;
-  background:    var(--bg);
-  border:        0.5px solid var(--border);
-  border-radius: 8px;
-  z-index:       20;
-  overflow:      hidden;
+  z-index:       100;
   max-height:    210px;
   overflow-y:    auto;
+
+  .sug-item        { cursor: pointer; &:hover { background: var(--bs-secondary-bg); } }
+  .sug-custom      { color: var(--clr-in-text); font-style: italic; }
 }
 
-.sug-item {
-  padding:    9px 12px;
-  font-size:  14px;
-  cursor:     pointer;
-  color:      var(--text);
-  transition: background .1s;
-  &:hover  { background: var(--bg2); }
-}
-
-.sug-custom {
-  color:       var(--in-text);
-  font-style:  italic;
-  border-top:  0.5px solid var(--border);
-}
-
-.sug-empty {
-  padding:   10px 12px;
-  font-size: 13px;
-  color:     var(--text2);
-}
-
-// ── Raccourcis date ───────────────────────────────────────────────────────────
-.date-shortcuts {
-  display:    flex;
-  gap:        5px;
-  margin-top: 6px;
-  flex-wrap:  wrap;
-}
-
-.shortcut {
-  padding:       5px 10px;
-  border:        0.5px solid var(--border);
-  border-radius: 20px;
-  background:    transparent;
-  font-size:     12px;
-  cursor:        pointer;
-  color:         var(--text2);
-  transition:    .12s;
-  white-space:   nowrap;
-
-  &:hover, &.active {
-    background:  var(--bg3);
-    border-color: var(--text2);
-    color:       var(--text);
-    font-weight: 500;
-  }
-}
-
-// ── Bouton principal ──────────────────────────────────────────────────────────
-.btn-submit {
-  width:         100%;
-  padding:       12px;
-  border:        none;
-  border-radius: 8px;
-  font-size:     15px;
-  font-weight:   500;
-  cursor:        pointer;
-  transition:    .15s;
-  margin-top:    .25rem;
-
-  &.btn-in  { background: var(--in);  color: #fff; &:hover { filter: brightness(1.1); } }
-  &.btn-out { background: var(--out); color: #fff; &:hover { filter: brightness(1.1); } }
-  &:active  { transform: scale(.98); }
-}
-
-// ── Responsive tablette ───────────────────────────────────────────────────────
-@media (min-width: 600px) {
-  .form-page { padding: 1.5rem 2rem 3rem; }
-}
+// ── Montant : taille de police custom ─────────────────────────────────────────
+.amount-input { font-size: 1.2rem; font-weight: 500; }
