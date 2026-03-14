@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+.benchmark-wrapper {
+  min-height: 100vh;
+  background: #020617;
+  font-family: 'Share Tech Mono', monospace;
+  color: #e2e8f0;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: #38bdf8;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0.25rem 0;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: #38bdf8;
+    margin: 0.75rem auto;
+  }
+
+  .btn-run {
+    margin-top: 1rem;
+    padding: 0.75rem 2.5rem;
+    background: #38bdf8;
+    color: #020617;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:disabled {
+      background: #1e293b;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-card {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &.glow {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+  }
+
+  .metric-icon   { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .metric-label  { font-size: 0.65rem; color: #64748b; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+  .metric-value  { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+  .metric-unit   { font-size: 0.65rem; color: #475569; margin-top: 0.25rem; }
+  .metric-status { font-size: 0.6rem; letter-spacing: 0.15em; margin-top: 0.75rem; }
+}
+
+.individual-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  button {
+    padding: 0.4rem 1rem;
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    &:disabled {
+      color: #334155;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.log-panel {
+  background: #050b14;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 1rem;
+
+  .log-header {
+    font-size: 0.7rem;
+    color: #38bdf8;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.75rem;
+  }
+
+  .log-body {
+    height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: #0f172a; }
+    &::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+  }
+
+  .log-empty { color: #334155; font-size: 0.8rem; }
+
+  .log-line {
+    font-size: 0.78rem;
+
+    .log-time { color: #334155; margin-right: 0.5rem; }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+// .pulse { animation: pulse 1s infinite; }
+// ```
+
+// ---
+
+// ## Structure dans ton projet Angular
+// ```
+// src/app/
+//   benchmark/
+//     benchmark.component.ts
+//     benchmark.component.html
+//     benchmark.component.scss
+//   services/
+//     google-sheets.service.ts
