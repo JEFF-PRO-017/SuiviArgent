@@ -135,20 +135,21 @@ export class TransactionFormComponent implements OnInit {
 
   // ── Soumission ────────────────────────────────────────────────────────────
   submit(): void {
+    debugger
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
 
     // ngx-mask retourne la valeur avec espaces — on retire pour stocker le chiffre pur
-    const rawAmount = parseFloat(
-      (this.amountCtrl.value ?? '').replace(/\s/g, '')
-    );
+    // const rawAmount = parseFloat(
+    //   (this.amountCtrl.value ?? '').replace(/\s/g, '')
+    // );
 
     const row: RowConfig = {
       sheetName: SHEET_NAME,
       rowData: [
         crypto.randomUUID(),
         this.type(),
-        rawAmount,
+        this.amountCtrl.value,
         this.justifCtrl.value!.trim(),
         this.dateCtrl.value!,
       ],
