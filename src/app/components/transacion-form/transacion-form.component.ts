@@ -5,7 +5,7 @@ import { SheetsQueueServiceService } from '../../lib/@SheetsQueueService/sheets-
 import { GoogleSheetsService, RowConfig } from '../../lib/@google-sheets/google-sheets.service';
 
 type EntryType = 'in' | 'out';
-const SHEET_NAME = 'transactions';
+const SHEET_NAME = 'TRANSACTIONS';
 
 // ── Suggestions contexte scolaire ─────────────────────────────────────────────
 const SUGGESTIONS: Record<EntryType, string[]> = {
