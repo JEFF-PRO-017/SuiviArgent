@@ -22,20 +22,28 @@ const SUGGESTIONS: Record<EntryType, string[]> = {
     'Concours / Compétitions',
   ],
   out: [
-    'Salaires enseignants',
-    'Salaires personnel administratif',
+    // 'Salaires enseignants',
+    // 'Salaires personnel administratif',
     'Fournitures scolaires',
-    'Eau / Électricité',
+    // 'Eau / Électricité',
     'Entretien bâtiments',
-    'Achat mobilier / équipements',
-    'Transport scolaire',
+    'Achat équipements',
+    // 'Transport scolaire',
     'Frais administratifs',
-    'Réparations',
-    'Activités parascolaires',
-    'Matériel informatique',
-    'Formation du personnel',
+    'Réparations', //
+    'Activités parascolaires',// depenses or du cadre scolaire, impection, document,bourse 
+    // 'Matériel informatique',//
+    'Formation du personnel',// journnee pedagogique
   ],
 };
+const actParascl = [
+  'inspection',
+];
+const FraisAdministratifs = [
+  'bourse enseignants',
+  'transport',
+  'beer bununu',
+]
 
 @Component({
   selector: 'app-transaction-form',
@@ -48,22 +56,22 @@ const SUGGESTIONS: Record<EntryType, string[]> = {
 export class TransactionFormComponent implements OnInit {
 
   // ── Signals ───────────────────────────────────────────────────────────────
-  type     = signal<EntryType>('in');
+  type = signal<EntryType>('in');
   darkMode = signal(false);
 
   // ── Formulaire réactif ────────────────────────────────────────────────────
   form = new FormGroup({
     amount: new FormControl('', [Validators.required, Validators.min(1)]),
     justif: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    date:   new FormControl(this.todayISO(), Validators.required),
+    date: new FormControl(this.todayISO(), Validators.required),
   });
 
   // ── Suggestions ───────────────────────────────────────────────────────────
   showSuggestions = false;
-  activeShortcut  = 0;
+  activeShortcut = 0;
 
   filteredSuggestions = computed(() => {
-    const val  = this.form.get('justif')?.value ?? '';
+    const val = this.form.get('justif')?.value ?? '';
     const list = SUGGESTIONS[this.type()];
     return val.length === 0
       ? list
@@ -71,23 +79,23 @@ export class TransactionFormComponent implements OnInit {
   });
 
   showCustomOption = computed(() => {
-    const val  = this.form.get('justif')?.value ?? '';
+    const val = this.form.get('justif')?.value ?? '';
     const list = SUGGESTIONS[this.type()];
     return val.length > 2 && !list.some(s => s.toLowerCase() === val.toLowerCase());
   });
 
   // ── Raccourcis date ───────────────────────────────────────────────────────
   readonly shortcuts = [
-    { label: "Aujourd'hui", offset: 0   },
-    { label: 'Hier',        offset: -1  },
-    { label: '−7 jours',   offset: -7  },
-    { label: '−30 jours',  offset: -30 },
+    { label: "Aujourd'hui", offset: 0 },
+    { label: 'Hier', offset: -1 },
+    { label: '−7 jours', offset: -7 },
+    { label: '−30 jours', offset: -30 },
   ];
 
   constructor(
     private sheets: SheetsQueueServiceService,
     private sheetsGoogle: GoogleSheetsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.sheetsGoogle.createSheet({
@@ -99,9 +107,9 @@ export class TransactionFormComponent implements OnInit {
   // ── Helpers template ──────────────────────────────────────────────────────
   get amountCtrl() { return this.form.get('amount')!; }
   get justifCtrl() { return this.form.get('justif')!; }
-  get dateCtrl()   { return this.form.get('date')!;   }
+  get dateCtrl() { return this.form.get('date')!; }
 
-  isInvalid(ctrl: FormControl|any): boolean {
+  isInvalid(ctrl: FormControl | any): boolean {
     return ctrl.invalid && ctrl.touched;
   }
 
@@ -114,7 +122,7 @@ export class TransactionFormComponent implements OnInit {
 
   // ── Suggestions ───────────────────────────────────────────────────────────
   onJustifFocus(): void { this.showSuggestions = true; }
-  onJustifBlur(): void  { setTimeout(() => this.showSuggestions = false, 150); }
+  onJustifBlur(): void { setTimeout(() => this.showSuggestions = false, 150); }
 
   pickSuggestion(s: string): void {
     this.justifCtrl.setValue(s);
