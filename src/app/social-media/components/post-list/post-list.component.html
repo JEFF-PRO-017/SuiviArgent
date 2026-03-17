@@ -1,0 +1,4 @@
+<h2>Posts</h2>
+@for (post of posts$ | async; track $index) {
+<app-post-list-item [post]="post"></app-post-list-item>
+}
